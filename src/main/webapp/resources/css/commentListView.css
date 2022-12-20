@@ -1,0 +1,180 @@
+.wrap {
+  background-color: rgb(23, 26, 33);
+  color : white;
+  height : 1200px;
+}
+
+#commentArea {
+  width : 1000px;
+  margin : auto;
+}
+
+/* 별점 시작 */
+#starForm {
+  width : 1000px;
+  text-align : center;
+}
+
+#starScoreArea {
+  font-size : 20px;
+  text-align : center;
+}
+
+#commentInfo {
+  font-size : 20px;
+}
+
+#commentListView {
+    color : rgb(107, 109, 106);
+    background-color: transparent;
+    text-decoration: none;
+    border: none;
+    font-size : 15px;
+    font-weight : bold;
+    cursor: pointer;
+}
+
+.star {
+  position: relative;
+  font-size: 40px;
+  color: #ddd;
+  border-radius : 10px;
+}
+  
+.star input {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+  
+.star span {
+  width: 0;
+  position: absolute; 
+  left: 0;
+  color: #64ffda;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* 나의 코멘트 */
+#loginUserCommentArea {
+  border : 1px solid;
+  border-radius: 10px;
+  font-size : 13px;
+  height : 150px;
+  width : 1000px;
+  text-align : center;
+}
+
+#loginUserComment {
+  margin-top : 20px;
+}
+
+#myCommentTextarea {
+  border : none;
+  color : white;
+  width : 900px;
+  height : 70px;
+  background-color : transparent;
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  resize : none;
+}
+
+#loginUserCommentArea>button {
+  border-radius: 10px;
+  border : none;
+}
+
+/* 코멘트 리스트 */
+#commentContainer {
+  text-align : center;
+}
+
+.commentList {
+  text-align : center;
+  display : inline-block;
+}
+
+/* 다른 사람 코멘트 테이블  */
+#commentInfo {
+  text-align : left;
+  width : 1000px;
+}
+
+/* 현재 xx명의 UFO 이용자가 코멘트를 남겼습니다 */
+#commentAll {
+  width : 90%;
+  float : left;
+  font-size : 20px;
+}
+
+/* 더보기 */
+#commentRequestAll {
+  width : 10%;
+  float : left;
+  font-size : 15px;
+  text-align : right;
+  margin-top : 5px;
+}
+
+.personalComment {
+  margin-left : 20px;
+  margin-right : 10px;
+  height : 300px;
+  width : 300px;
+  background-color: white;
+  color :rgb(23, 26, 33);
+  border-radius : 10px;
+}
+
+.personalCommentTitle {
+  height : 70px;
+}
+
+.commentTitle1 {
+  background-color: #64ffda;
+  border-top-left-radius: 10px;
+}
+
+.commentTitle2 {
+  background-color: #64ffda;
+  border-top-right-radius: 10px;
+}
+
+.personalCommentStar {
+  background-color: rgb(23, 26, 33);
+  color : white;
+  border-radius: 10px;
+  text-align : center;
+  margin-top : 11px;
+  margin-left : 200px;
+  width : 80px;
+  height : 30px;
+}
+
+.personalCommentContent {
+  height : 200px;
+  font-size : 14px;
+}
+
+/* 신고 버튼 */
+#commentReport {
+  font-size : 13px;
+  border : 10px;
+  border-radius : 7px;
+
+}
+
+/* 신고 모달창 */
+#commentReportModal {
+  color :rgb(23, 26, 33);
+}
+
+.btn-submit {
+  background-color:rgb(23, 26, 33);
+}

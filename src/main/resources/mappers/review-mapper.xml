@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="reviewMapper">
+
+	<!-- 리뷰 관련 resultSet, 작성자: 수빈 -->
+	<resultMap id="reviewResultSet" type="review">
+		<result column="REVIEW_NO" property="reviewNo" />
+		<result column="USER_NO" property="userNo" />
+		<result column="MOVIE_ID" property="movieId" />
+		<result column="MOVIE_TITLE" property="movieTitle" />
+		<result column="TV_ID" property="tvId" />
+		<result column="TV_NAME" property="tvName" />
+		<result column="REVIEW_STAR" property="reviewStar" />
+		<result column="REVIEW_CONTENT" property="reviewContent" />
+		<result column="REVIEW_REGISTER_DATE" property="reviewDate" />
+		<result column="REVIEW_STATUS" property="reviewStatus" />
+		<result column="USER_ID" property="userId" />
+		<result column="USER_NICKNAME" property="userNickname" />
+	</resultMap>
+	
+	<!-- 신고 관련 resultSet, 작성자: 수빈 -->
+	<resultMap id="reportResultSet" type="report">
+		<result column="REPORT_NO" property="reportNo" />
+		<result column="REVIEW_NO" property="reviewNo" />
+		<result column="COM_ID" property="comId" />
+		<result column="COM_RPL_NO" property="comRplNo" />
+		<result column="USER_NO" property="userNo" />
+		<result column="REPORT_REASON" property="reportReason" />
+		<result column="REPORT_DATE" property="reportDate" />
+		<result column="REPORT_STATUS" property="reportStatus" />
+	</resultMap>
+	
+	<!-- 콘텐츠 화면에서 별점/코멘트 탭을 클릭했을 때 뜨는 창에서 해당 콘텐츠의 코멘트 개수를 알려 주는 메소드 - 작성자: 수빈 -->
+	<select id="selectCommentListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM REVIEW
+		WHERE REVIEW_STATUS = 'Y'
+		    AND MOVIE_ID = #{contentsId} OR TV_ID = #{contentsId}
+	</select>
+	
+	<!-- 콘텐츠 화면에서 별점/코멘트 탭을 클릭했을 때 뜨는 창 - 작성자: 수빈 -->
+	<select id="selectCommentList" resultMap="reviewResultSet">
+		SELECT *
+		FROM 
+		    (SELECT REVIEW_NO
+		    		 , USER_NO
+		             , MB.USER_ID
+		             , MB.USER_NICKNAME
+		             , MOVIE_ID
+		             , TV_ID
+		             , TO_CHAR(REVIEW_STAR, 'FM0.0') AS "REVIEW_STAR"
+		             , REVIEW_CONTENT
+		    FROM REVIEW R
+		    LEFT JOIN MEMBER MB USING(USER_NO)
+		    WHERE REVIEW_STATUS = 'Y'
+	          AND MOVIE_ID = #{contentsId} OR TV_ID = #{contentsId}
+		    ORDER BY REVIEW_REGISTER_DATE DESC)
+		WHERE ROWNUM <![CDATA[ < ]]>= 3
+	</select>
+	
+	<!-- 콘텐츠 화면에서 별점/코멘트 더보기를 클릭했을 때 뜨는 창 - 작성자: 수빈 -->
+	<select id="selectCommentListAll" resultMap="reviewResultSet">
+		SELECT REVIEW_NO
+			 , USER_NO
+         	 , MB.USER_ID
+         	 , MB.USER_NICKNAME
+         	 , R.MOVIE_ID
+         	 , R.TV_ID
+         	 , MV.TITLE AS "MOVIE_TITLE"
+         	 , TV.NAME AS "TV_NAME"
+         	 , TO_CHAR(REVIEW_STAR, 'FM0.0') AS "REVIEW_STAR"
+         	 , REVIEW_CONTENT
+		FROM REVIEW R
+		LEFT JOIN MEMBER MB USING(USER_NO)
+		LEFT JOIN MOVIE MV ON(R.MOVIE_ID = MV.MOVIE_ID)
+		LEFT JOIN TV ON (R.MOVIE_ID = TV.TV_ID)
+		WHERE REVIEW_STATUS = 'Y'
+		    AND R.MOVIE_ID = #{contentsId} OR R.TV_ID = #{contentsId}
+		ORDER BY REVIEW_REGISTER_DATE DESC
+	</select>
+	
+	<!-- 콘텐츠 화면 별점/코멘트 탭에서 신고를 눌렀을 때 사용할 메소드 - 작성자: 수빈 -->
+	<insert id="reportComment" parameterType="report">
+		INSERT INTO REPORT (REPORT_NO
+                          , REVIEW_NO
+                          , USER_NO
+                          , REPORT_REASON
+                          , REPORT_DATE
+                          , REPORT_STATUS)
+               		VALUES (SEQ_REPORT_NO.NEXTVAL
+                          , #{form_reviewNo}
+                          , #{form_loginUserNo}
+                          , #{reportReason}
+                          , SYSDATE
+                          , 'N')
+	</insert>
+	
+	<!-- 콘텐츠 화면에서 나의 리뷰 가지고 오기 - 작성자: 수빈 -->
+	<select id="selectMyComment" resultMap="reviewResultSet" parameterType="hashmap">
+		SELECT REVIEW_NO
+			 , USER_NO
+	         , MB.USER_ID
+	         , R.MOVIE_ID
+	         , R.TV_ID
+	         , TO_CHAR(REVIEW_STAR, 'FM0.0') AS "REVIEW_STAR"
+	         , REVIEW_CONTENT
+		FROM REVIEW R
+		LEFT JOIN MEMBER MB USING(USER_NO)
+		LEFT JOIN MOVIE MV ON(R.MOVIE_ID = MV.MOVIE_ID)
+		LEFT JOIN TV ON (R.MOVIE_ID = TV.TV_ID)
+		WHERE REVIEW_STATUS = 'Y'
+	           AND USER_NO = #{loginUserNo}
+		    AND R.MOVIE_ID = #{contentsId} OR R.TV_ID = #{contentsId}
+		ORDER BY REVIEW_REGISTER_DATE DESC
+	</select>
+	
+	<!-- 컨텐츠 화면에서 나의 코멘트를 삭제하는 메소드 - 작성자: 수빈 -->
+	<update id="deleteMyComment" parameterType="_int">
+		UPDATE REVIEW
+		   SET REVIEW_CONTENT = NULL
+		WHERE REVIEW_NO = #{myReviewNo}
+	</update>
+	
+	<!-- 컨텐츠 화면에서 나의 코멘트를 작성하는 메소드 - 작성자: 수빈 -->
+	<update id="insertMyComment" parameterType="hashmap">
+		UPDATE REVIEW
+		   SET REVIEW_CONTENT = #{myComment}
+		WHERE REVIEW_NO = #{myReviewNo}
+	</update>
+	
+	<!-- 컨텐츠 화면에서 나의 코멘트를 수정하는 메소드 - 작성자: 수빈 -->
+	<update id="updateMyComment" parameterType="hashmap">
+		UPDATE REVIEW
+		   SET REVIEW_CONTENT = #{updateMyComment}
+		WHERE REVIEW_NO = #{myReviewNo}
+	</update>
+	
+	<!-- 콘텐츠에서 별점을 줄 때 사용할(insert or update) 메소드 - 작성자: 수빈 -->
+	<select id="selectCondition" parameterType="hashmap" resultType="_int">
+		SELECT COUNT(*)
+		FROM REVIEW
+		WHERE USER_NO = #{loginUserNo}
+		  AND MOVIE_ID = #{contentsId} OR TV_ID = #{contentsId}
+	</select>
+	
+	<!-- 콘텐츠에서 있는 별점을 수정할 때 사용할 메소드 - 작성자: 수빈 -->
+	<update id="updateMyStar" parameterType="hashmap">
+		UPDATE REVIEW
+		   SET REVIEW_STAR = #{conversionScore}
+		WHERE REVIEW_NO = #{myReviewNo}
+	</update>
+	
+	<insert id="insertMyStar" parameterType="review">
+		INSERT INTO REVIEW (REVIEW_NO
+                  		  , USER_NO
+		<if test="movieId == ''">
+                  		  , TV_ID
+		</if>
+		<if test="tvId == null">
+                  		  , MOVIE_ID
+		</if>
+                  		  , REVIEW_STAR
+                  		  , REVIEW_REGISTER_DATE
+                  		  , REVIEW_STATUS)
+           		    VALUES (SEQ_REVIEW_NO.NEXTVAL
+		                  , #{loginUserNo}
+		                  , #{contentsId}
+		                  , #{conversionScore}
+		                  , SYSDATE
+		                  , 'Y')
+		
+	</insert>
+
+</mapper>

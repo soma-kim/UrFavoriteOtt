@@ -1,0 +1,111 @@
+.wrap {
+    background-color: rgb(23, 26, 33);
+    color : white;
+    height : 2000px;
+  }
+
+  /* 코멘트 영역 */
+  #commentArea {
+    width : 1000px;
+    margin : auto;
+  }
+
+  /* <콘텐츠이름>에 대한 코멘트입니다 */
+  #pageInfo {
+    font-size : 30px;
+    text-align : center;
+  }
+
+  /* 정렬 탭 */
+  #sortList {
+    width : 800px;
+    margin : auto;
+  }
+
+  /* 반복 돌릴 코멘트 div */
+  #commentList {
+    margin : auto;
+    height : 300px;
+  }
+  
+  /* 다른 사람 코멘트 테이블  */
+  .personalComment {
+    margin-left : 20px;
+    margin-right : 10px;
+    width : 800px;
+    background-color: white;
+    color :rgb(23, 26, 33);
+    border-radius : 10px;
+    margin : auto;
+  }
+  
+  .personalCommentTitle {
+    height : 50px;
+  }
+  
+  .commentTitle1 {
+    background-color: #64ffda;
+    border-top-left-radius: 10px;
+    width : 90%;
+    padding : 15px;
+  }
+  
+  .commentTitle2 {
+    background-color: #64ffda;
+    border-top-right-radius: 10px;
+  }
+  
+  .personalCommentStar {
+    background-color: rgb(23, 26, 33);
+    color : white;
+    border-radius: 10px;
+    text-align : center;
+    margin-top : 11px;
+    margin-left : 700px;
+    width : 80px;
+    height : 30px;
+  }
+  
+  .personalCommentContentTR {
+    height : 150px;
+    font-size : 14px;
+  }
+
+  .personalCommentContent {
+    padding-left : 20px;
+    padding-right : 20px;
+  }
+  
+  /* 신고 버튼 */
+  #commentReport {
+    font-size : 13px;
+    border : 10px;
+    border-radius : 7px;
+  
+  }
+
+  /* 페이징 처리 */
+  #pagingArea {
+    width : 1000px;
+    text-align: center;
+  }
+
+  #pagingArea>button {
+    background-color: #64ffda;
+    border-radius : 5px;
+    margin-left : 5px;
+    margin-right : 5px;
+    width : 40px;
+    height : 40px;
+    /* opacity : 40%; */
+    cursor: pointer;
+  }
+
+  /* 신고 모달창 */
+  #commentReportModal {
+    color :rgb(23, 26, 33);
+  }
+  
+  .btn-submit {
+    background-color:rgb(23, 26, 33);
+  }

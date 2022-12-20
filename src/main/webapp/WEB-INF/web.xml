@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+	<!--
+		* web.xml (배포서술자)
+		: 서버 기본 환경 설정 (서버 구동 시 1번째로 실행)
+	-->
+
+	<!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
+	<!-- 최상위 Spring 설정 파일 (root-context.xml + spring-security.xml) 경로 : 서버 구동 시 2번째로 실행 -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			/WEB-INF/spring/root-context.xml
+			/WEB-INF/spring/spring-security.xml
+		</param-value>
+	</context-param>
+
+	<!-- Creates the Spring Container shared by all Servlets and Filters -->
+	<!-- 모든 환경 설정 파일 연결 도구 (bean = 자바 객체) 등록 -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<!-- Processes application requests -->
+	<!-- 모든 요청 처리할 메인 Servlet (DispatcherServlet) 등록 -->
+	<servlet>
+		<servlet-name>appServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+
+		<!-- DispatcherServlet 설정 파일 (servlet-context.xml) 경로 : 서버 구동 시 3번째로 실행 -->
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
+		</init-param>
+
+		<!-- DispatcherServlet 설정 파일 우선 순위 설정 : 1순위 -->
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<!-- 모든 요청 처리할 메인 Servlet 명시 : DispatcherServlet -->
+	<servlet-mapping>
+		<servlet-name>appServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+	<!-- Spring 인코딩 필터 등록 -->
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<!-- 옵션 1. 인코딩 방식 설정 (UTF-8) -->
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<!-- 옵션 2. 충돌 시 강제 인코딩 설정 (UTF-8) -->
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+
+	<!-- 인코딩 필터 모든 요청에 적용하도록 설정 -->
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+</web-app>

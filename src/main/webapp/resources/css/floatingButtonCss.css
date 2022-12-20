@@ -1,0 +1,80 @@
+@charset "UTF-8";
+
+/* ---------- 전체 영역 ---------- */
+
+/* 테두리 기준으로 박스 크기 계산 */
+* { box-sizing: border-box; }
+
+.wrap {
+    /* 화면 가로 크기 : 최소 1400(px) */
+    width: 100%;
+    min-width: 1400px;
+    min-height: 1600px;
+    /* 배경 색상 설정 */
+    background-color: rgb(23, 26, 33);
+}
+
+#content_container {
+    padding-top: 110px;
+    padding-bottom: 50px;
+    color:rgb(255, 255, 255);
+}
+
+/* 다크, 라이트 모드 */
+:root[color-theme='light'] .wrap,
+:root[color-theme='light'] .sub_menu,
+:root[color-theme='light'] #footer_container { background-color: rgb(255, 255, 255) !important; }
+
+:root[color-theme='light'] #header_container { background-image: linear-gradient(to bottom, rgb(255, 255, 255) 95%, transparent); }
+
+:root[color-theme='light'] .main_menu:not(#logout_menu)>a,
+:root[color-theme='light'] i,
+:root[color-theme='light'] .sub_menu>li>a,
+:root[color-theme='light'] #header_search_container input,
+:root[color-theme='light'] #header_userInfo p,
+:root[color-theme='light'] .main_text,
+:root[color-theme='light'] #footer_link a { color: rgb(0, 0, 0) !important; }
+
+:root[color-theme='light'] .sub_menu>li:hover>a:not(#header_userInfo a) { color: rgb(255, 255, 255) !important; }
+:root[color-theme='light'] #footer_link a:hover { color: rgb(154, 139, 139) !important; }
+
+:root[color-theme='light'] .slick-arrow::before,
+:root[color-theme='light'] .slick-dots li button::before { color: #0cac87 !important; }
+
+
+/* ---------- 플로팅 버튼 영역 ---------- */
+#floating_container {
+    /* 크기 설정 */
+    width: 100px;
+    height: 180px;
+    /* 오른쪽 하단 위치 고정 */
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    /* 항상 가장 위로 오게 배치 설정 */
+    z-index: 9;
+}
+#floating_container>div {
+    /* 크기 설정 */
+    height: 50%;
+    /* 위치 설정 */
+    position: relative;
+}
+/* 아이콘 색상 설정 */
+#floating_container i { color: rgb(255, 255, 255); }
+
+
+/* ===== 상하단 이동 스크롤 버튼 ===== */
+#scroll_button_container i {
+    /* 크기 설정 */
+    font-size: 2.5rem;
+    /* 위치 설정 */
+    position: absolute;
+    left: 10px;
+}
+
+/* ~~~ 상단 이동 버튼 숨김 ~~~ */
+#scroll_top { display: none; }
+
+/* ~~~ 하단 이동 버튼 위치 설정 ~~~ */
+#scroll_bottom>i { bottom: 0px; }

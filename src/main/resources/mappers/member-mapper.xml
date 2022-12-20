@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="memberMapper">
+
+	<resultMap id="memberResultSet" type="member">
+		<result column="USER_NO" property="userNo" />
+		<result column="USER_ID" property="userId" />
+		<result column="USER_PWD" property="userPwd" />
+		<result column="USER_NICKNAME" property="userNickname" />
+		<result column="USER_ENROLL_DATE" property="userEnrollDate" />
+		<result column="USER_STATUS" property="userStatus" />
+		<result column="USER_PROFILE" property="userProfile" />
+	</resultMap>
+	
+	<!-- 리뷰 관련 resultSet, 작성자: 수빈 -->
+	<resultMap id="reviewResultSet" type="review">
+		<result column="REVIEW_NO" property="reviewNo" />
+		<result column="USER_NO" property="userNo" />
+		<result column="MOVIE_ID" property="movieId" />
+		<result column="MOVIE_TITLE" property="movieTitle" />
+		<result column="TV_ID" property="tvId" />
+		<result column="TV_NAME" property="tvName" />
+		<result column="REVIEW_STAR" property="reviewStar" />
+		<result column="REVIEW_CONTENT" property="reviewContent" />
+		<result column="REVIEW_REGISTER_DATE" property="reviewDate" />
+		<result column="REVIEW_STATUS" property="reviewStatus" />
+		<result column="USER_ID" property="userId" />
+		<result column="USER_NICKNAME" property="userNickname" />
+	</resultMap>
+	
+	<!-- 로그인용 쿼리문(암호화작업 완료) -->
+	<select id="loginMember" parameterType="member" resultMap="memberResultSet">
+		SELECT *
+		FROM MEMBER
+		WHERE USER_ID = #{userId}
+		AND USER_STATUS = 'Y'
+	</select>
+	
+	<!-- 회원가입용 쿼리문 -->
+	<insert id="insertMember" parameterType="member">
+		INSERT INTO MEMBER (USER_NO
+		                 ,  USER_ID
+		                 ,  USER_PWD
+		                 ,  USER_NICKNAME)
+		            VALUES (SEQ_USER_NO.NEXTVAL
+		                 ,  #{userId}
+		                 ,  #{userPwd}
+		                 ,  #{userNickname})
+	</insert>
+	
+	<!-- 사용자 - 닉네임 중복확인용 쿼리문 -->
+	<select id="nicknameCheck" parameterType="string" resultType="_int">
+		SELECT COUNT(*)
+		  FROM MEMBER
+		 WHERE USER_NICKNAME = #{checkNickname}
+	</select>
+	
+	<!-- 사용자 - 회원정보 수정용 쿼리문 -->
+	<update id="updateMember" parameterType="member">
+		UPDATE MEMBER
+		   SET USER_PROFILE = #{userProfile}
+		     , USER_NICKNAME = #{userNickname}
+		 WHERE USER_NO = #{userNo}
+	</update>
+	
+	<!-- 관리자 - 회원 수 확인용 쿼리문 -->
+	<select id="selectListCount" resultType="_int">
+		SELECT COUNT(*)
+		  FROM MEMBER
+	</select>
+	
+	<!-- 관리자 - 회원 리스트 전체 조회용 쿼리문 -->
+	<select id="selectList" resultMap="memberResultSet">
+		SELECT USER_NO
+			 , USER_ID
+			 , USER_NICKNAME
+			 , USER_ENROLL_DATE
+			 , USER_STATUS
+		  FROM MEMBER
+	  ORDER BY USER_NO DESC
+	</select>
+	
+	<!-- 관리자 - 검색된 회원 수 확인용 쿼리문 -->
+	<select id="selectSearchCount" parameterType="hashmap" resultType="_int">
+		SELECT COUNT(*)
+		  FROM MEMBER
+		 WHERE 
+		 <if test="keyword == 'userId'">
+		 	USER_ID
+		 </if>
+		 <if test="keyword == 'userNickname'">
+		 	USER_NICKNAME
+		 </if>
+		 LIKE '%' || #{searchword} || '%'
+	</select>
+	
+	<!-- 관리자 - 검색된 회원 리스트 전체 조회용 쿼리문 -->
+	<select id="selectSearchList" parameterType="hashmap" resultMap="memberResultSet">
+		SELECT USER_NO
+			 , USER_ID
+			 , USER_NICKNAME
+			 , USER_ENROLL_DATE
+			 , USER_STATUS
+		  FROM MEMBER
+		 WHERE 
+		 <if test="keyword == 'userId'">
+		 	USER_ID
+		 </if>
+		 <if test="keyword == 'userNickname'">
+		 	USER_NICKNAME
+		 </if>
+		 LIKE '%' || #{searchword} || '%'
+		 ORDER BY USER_NO DESC
+	</select>
+	
+	<!-- 관리자 - 비밀번호 초기화 쿼리문 -->
+	<update id="updatePwd" parameterType="_int">
+		UPDATE MEMBER
+		   SET USER_PWD = '000000'
+		 WHERE USER_NO = #{userNo}
+	</update>
+	
+	<!-- 관리자 - 회원 탈퇴 처리용 쿼리문 -->
+	<update id="deleteMember" parameterType="_int">
+		UPDATE MEMBER
+		   SET USER_STATUS = 'N'
+		 WHERE USER_NO = #{userNo}
+	</update>
+	
+	<!-- 마이 페이지 별점 및 코멘트 내역 조회를 위한 페이징바(select) - 작성자 : 수빈 -->
+	<select id="selectMyCommentListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM REVIEW
+		WHERE REVIEW_STATUS = 'Y'
+           AND USER_NO = #{loginUserNo}
+	</select>
+	
+	<!-- 마이 페이지 별점 및 코멘트 내역에서 코멘트 조회 (select) - 작성자 : 수빈 -->
+	<select id="selectMyCommentList" resultMap="reviewResultSet">
+		SELECT REVIEW_NO
+		     , MB.USER_ID
+		     , MB.USER_NICKNAME
+		     , MV.TITLE AS "MOVIE_TITLE"
+		     , TV.NAME AS "TV_NAME"
+		     , TO_CHAR(REVIEW_STAR, 'FM0.0') AS "REVIEW_STAR"
+		     , REVIEW_CONTENT
+		FROM REVIEW R
+		LEFT JOIN MEMBER MB USING(USER_NO)
+		LEFT JOIN MOVIE MV ON(R.MOVIE_ID = MV.MOVIE_ID)
+		LEFT JOIN TV ON (R.MOVIE_ID = TV.TV_ID)
+		WHERE REVIEW_STATUS = 'Y'
+           AND USER_NO = #{loginUserNo}
+		ORDER BY REVIEW_REGISTER_DATE DESC
+	</select>
+	
+	<!-- 마이 페이지 별점 및 코멘트 내역에서 선택된 리뷰 삭제 메소드 - 작성자: 수빈  -->
+	<update id="deleteMyComment" parameterType="_int">
+		UPDATE REVIEW
+		   SET REVIEW_STATUS = 'N'
+		WHERE REVIEW_NO = ${checkNum}
+	</update>
+</mapper>

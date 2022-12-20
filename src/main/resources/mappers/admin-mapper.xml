@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="adminMapper">
+
+	<!-- 매출 통계 관련 resultSet - 작성자 : 장희연  -->
+	<resultMap id="salesResultSet" type="sales">
+		<result column="TOTAL" property="total" />
+		<result column="DATE_RANGE" property="dateRange" />
+	</resultMap>
+
+	<!-- 리뷰 관련 resultSet, 작성자: 수빈 -->
+	<resultMap id="reviewResultSet" type="review">
+		<result column="REVIEW_NO" property="reviewNo" />
+		<result column="USER_NO" property="userNo" />
+		<result column="MOVIE_ID" property="movieId" />
+		<result column="MOVIE_TITLE" property="movieTitle" />
+		<result column="TV_ID" property="tvId" />
+		<result column="TV_NAME" property="tvName" />
+		<result column="REVIEW_STAR" property="reviewStar" />
+		<result column="REVIEW_CONTENT" property="reviewContent" />
+		<result column="REVIEW_REGISTER_DATE" property="reviewDate" />
+		<result column="REVIEW_STATUS" property="reviewStatus" />
+		<result column="USER_ID" property="userId" />
+		<result column="USER_NICKNAME" property="userNickname" />
+		<result column="REPORT_NO" property="reportNo" />
+		<result column="REPORT_REASON" property="reportReason" />
+		<result column="REPORT_STATUS" property="reportStatus" />
+	</resultMap>
+	
+	<!-- 신고 관련 resultSet, 작성자: 수빈 -->
+	<resultMap id="reportResultSet" type="report">
+		<result column="REPORT_NO" property="reportNo" />
+		<result column="REVIEW_NO" property="reviewNo" />
+		<result column="COM_NO" property="comNo" />
+		<result column="COM_RPL_NO" property="comRplNo" />
+		<result column="USER_NO" property="userNo" />
+		<result column="REPORT_REASON" property="reportReason" />
+		<result column="REPORT_DATE" property="reportDate" />
+		<result column="REPORT_STATUS" property="reportStatus" />
+	</resultMap>
+	
+	<!-- COMMUNITY 테이블로부터 조회된 내용을 community 타입으로 가공해주는 ResultMap - 작성자: 황혜진 -->
+	<resultMap id="communityResultSet" type="community">
+		<result column="COM_NO" property="comNo" />
+		<result column="COM_TITLE" property="comTitle" />
+		<result column="COM_CONTENT" property="comContent" />
+		<result column="COM_REGISTER_DATE" property="comRegisterDate" />
+		<result column="COM_HIT" property="comHit" />
+		<result column="COM_STATUS" property="comStatus" />
+		<result column="USER_NICKNAME" property="userNickname" />
+		<result column="USER_NO" property="userNo" />
+		<result column="REPORT_NO" property="reportNo" />
+		<result column="REPORT_REASON" property="reportReason" />
+		<result column="REPORT_DATE" property="reportDate" />
+		<result column="REPORT_STATUS" property="reportStatus" />
+	</resultMap>	
+	
+	<!-- COMMUNITY_REPLY 테이블로부터 조회된 내용을 communityReply 타입으로 가공해주는 ResultMap - 작성자: 황혜진 -->
+	<resultMap id="replyResultSet" type="communityReply">
+		<result column="COM_RPL_NO" property="comRplNo" />
+		<result column="COM_NO" property="comNo" />
+		<result column="COM_RPL_CONTENT" property="comRplContent" />
+		<result column="COM_RPL_REGISTER_DATE" property="comRplRegisterDate" />
+		<result column="COM_RPL_STATUS" property="comRplStatus" />
+		<result column="USER_NICKNAME" property="userNickname" />
+		<result column="USER_NO" property="userNo" />
+		<result column="REPORT_NO" property="reportNo" />
+		<result column="REPORT_REASON" property="reportReason" />
+		<result column="REPORT_DATE" property="reportDate" />
+		<result column="REPORT_STATUS" property="reportStatus" />
+	</resultMap>
+	
+	<!-- 관리자 한달이용권 월별 매출 - 작성자 : 장희연  -->
+	<select id="selectSalesPerMonthOnce" resultMap="salesResultSet">
+		SELECT SUM(PAYMENT) "TOTAL"
+			 , (TO_CHAR(PAY_DATE,'YYYY.MM')) "DATE_RANGE"
+		FROM PAYMENT
+		GROUP BY TO_CHAR(PAY_DATE,'YYYY.MM')
+		HAVING <![CDATA[ TO_CHAR(PAY_DATE,'YYYY.MM') >= TO_CHAR(ADD_MONTHS(SYSDATE,-11),'YYYY.MM') ]]>
+		   AND <![CDATA[ TO_CHAR(PAY_DATE,'YYYY.MM') <= TO_CHAR(SYSDATE,'YYYY.MM') ]]>
+		ORDER BY DATE_RANGE
+	</select>
+	
+	<!-- 관리자 월별구독권 월별 매출 - 작성자 : 장희연 -->
+	<select id="selectSalesPerMonthSub" resultMap="salesResultSet">
+		SELECT SUM(REG_PAYMENT) "TOTAL"
+			 , (TO_CHAR(REG_START_DATE,'YYYY.MM')) "DATE_RANGE"
+		FROM PAYMENT_REGULAR
+		GROUP BY TO_CHAR(REG_START_DATE,'YYYY.MM')
+		HAVING <![CDATA[ TO_CHAR(REG_START_DATE,'YYYY.MM') >= TO_CHAR(ADD_MONTHS(SYSDATE,-11),'YYYY.MM') ]]>
+		   AND <![CDATA[ TO_CHAR(REG_START_DATE,'YYYY.MM') <= TO_CHAR(SYSDATE,'YYYY.MM') ]]>
+		ORDER BY DATE_RANGE
+	</select>
+	
+	<!-- 관리자 월별 매출 - 작성자 : 장희연 -->
+	<select id="selectSalesPerMonth" resultMap="salesResultSet">
+		SELECT SUM(TOTAL) "TOTAL"
+			 , DATE_RANGE
+		FROM (
+		    SELECT SUM(REG_PAYMENT) "TOTAL"
+		         , (TO_CHAR(REG_START_DATE,'YYYY.MM')) "DATE_RANGE"
+		    FROM PAYMENT_REGULAR
+		    GROUP BY TO_CHAR(REG_START_DATE,'YYYY.MM')
+		    HAVING <![CDATA[ TO_CHAR(REG_START_DATE,'YYYY.MM') >= TO_CHAR(ADD_MONTHS(SYSDATE,-11),'YYYY.MM') ]]>
+		       AND <![CDATA[ TO_CHAR(REG_START_DATE,'YYYY.MM') <= TO_CHAR(SYSDATE,'YYYY.MM') ]]>
+		    UNION
+		    SELECT SUM(PAYMENT) "TOTAL"
+		         , (TO_CHAR(PAY_DATE,'YYYY.MM')) "DATE_RANGE"
+		    FROM PAYMENT
+		    GROUP BY TO_CHAR(PAY_DATE,'YYYY.MM')
+		    HAVING <![CDATA[ TO_CHAR(PAY_DATE,'YYYY.MM') >= TO_CHAR(ADD_MONTHS(SYSDATE,-11),'YYYY.MM') ]]>
+		       AND <![CDATA[ TO_CHAR(PAY_DATE,'YYYY.MM') <= TO_CHAR(SYSDATE,'YYYY.MM') ]]>
+		)
+		GROUP BY DATE_RANGE
+		ORDER BY DATE_RANGE
+	</select>
+	
+	<select id="selectViewsTV" parameterType="string" resultType="_int">
+		SELECT VIEWS
+		FROM TV
+		WHERE GENRES LIKE '%' || #{genre} || '%'
+	</select>
+	
+	<select id="selectViewsMovie" parameterType="string" resultType="_int">
+		SELECT VIEWS
+		FROM MOVIE
+		WHERE GENRES LIKE '%' || #{genre} || '%'
+	</select>
+
+	<!-- 관리자 페이지 코멘트 관리를 위한 페이징바 , 작성자: 수빈 -->
+	<select id="selectAdminCommentListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM REVIEW
+		WHERE REVIEW_STATUS = 'Y'
+	</select>
+	
+	<!-- 관리자 페이지에서 코멘트 관리를 위해 모든 코멘트 조회 (select), 작성자: 수빈 -->
+	<select id="selectAdminCommentList" resultMap="reviewResultSet">
+		SELECT REVIEW_NO
+		     , MB.USER_ID
+		     , MB.USER_NICKNAME
+		     , MV.TITLE AS "MOVIE_TITLE"
+		     , TV.NAME AS "TV_NAME"
+		     , TO_CHAR(REVIEW_STAR, 'FM0.0') AS "REVIEW_STAR"
+		     , REVIEW_CONTENT
+		FROM REVIEW R
+		LEFT JOIN MEMBER MB USING(USER_NO)
+		LEFT JOIN MOVIE MV ON(R.MOVIE_ID = MV.MOVIE_ID)
+		LEFT JOIN TV ON (R.MOVIE_ID = TV.TV_ID)
+		WHERE REVIEW_STATUS = 'Y'
+		ORDER BY REVIEW_REGISTER_DATE DESC
+	</select>
+	
+	<!-- 관리자 페이지 코멘트 관리에서 검색을 위한 페이징바(select) - 작성자: 수빈 -->
+	<select id="searchAdminCommentListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM REVIEW R
+		LEFT JOIN MEMBER MB USING(USER_NO)
+        LEFT JOIN MOVIE MV ON(R.MOVIE_ID = MV.MOVIE_ID)
+		LEFT JOIN TV ON (R.MOVIE_ID = TV.TV_ID)
+		<if test="condition == 'contentsTitle'">
+			WHERE TV.NAME LIKE '%' || #{keyword} || '%' OR MV.TITLE LIKE '%' || #{keyword} || '%'
+        </if>
+        <if test="condition == 'userId'">
+        	WHERE MB.USER_ID LIKE '%' || #{keyword} || '%'
+        </if>
+        <if test="condition == 'userNickname'">
+        	WHERE MB.USER_NICKNAME LIKE '%' || #{keyword} || '%'
+        </if>
+        AND REVIEW_STATUS = 'Y'
+	</select>
+	
+	<!-- 관리자 페이지 코멘트 관리에서 검색된 코멘트 조회 (select) - 작성자: 수빈 -->
+	<select id="searchAdminCommentList" resultMap="reviewResultSet">
+		SELECT REVIEW_NO
+		     , MB.USER_ID
+		     , MB.USER_NICKNAME
+		     , MV.TITLE AS "MOVIE_TITLE"
+		     , TV.NAME AS "TV_NAME"
+		     , TO_CHAR(REVIEW_STAR, 'FM0.0') AS "REVIEW_STAR"
+		     , REVIEW_CONTENT
+		FROM REVIEW R
+		LEFT JOIN MEMBER MB USING(USER_NO)
+		LEFT JOIN MOVIE MV ON(R.MOVIE_ID = MV.MOVIE_ID)
+		LEFT JOIN TV ON (R.MOVIE_ID = TV.TV_ID)
+		<if test="condition == 'contentsTitle'">
+			WHERE TV.NAME LIKE '%' || #{keyword} || '%' OR MV.TITLE LIKE '%' || #{keyword} || '%'
+        </if>
+        <if test="condition == 'userId'">
+        	WHERE MB.USER_ID LIKE '%' || #{keyword} || '%'
+        </if>
+        <if test="condition == 'userNickname'">
+        	WHERE MB.USER_NICKNAME LIKE '%' || #{keyword} || '%'
+        </if>
+        AND REVIEW_STATUS = 'Y'
+		ORDER BY REVIEW_REGISTER_DATE DESC
+	</select>
+	
+	<!-- 관리자 페이지 코멘트 관리에서 선택된 코멘트 삭제 (update) - 작성자: 수빈  -->
+	<update id="deleteAdminComment" parameterType="_int">
+		UPDATE REVIEW
+		   SET REVIEW_STATUS = 'N'
+		WHERE REVIEW_NO = ${checkNum}
+	</update>
+	
+	<!-- 관리자 페이지 코멘트 신고 관리를 위한 페이징바(select) - 작성자: 수빈 -->
+	<select id="reportedCommentListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM REPORT
+		WHERE REPORT_STATUS = 'N'
+		  AND REVIEW_NO IS NOT NULL
+	</select>
+	
+	<!-- 관리자 페이지에서 신고 관리를 위해 신고된 모든 코멘트 조회 (select) - 작성자: 수빈 -->
+	<select id="reportedCommentList" resultMap="reviewResultSet">
+		SELECT M.USER_ID
+			 , REPORT_NO
+		     , REVIEW_NO
+		     , REVIEW_REGISTER_DATE
+		     , REVIEW_CONTENT
+		     , REPORT_REASON
+		     , REPORT_STATUS
+		FROM REPORT RP
+		LEFT JOIN REVIEW RV USING (REVIEW_NO)
+		LEFT JOIN MEMBER M ON (M.USER_NO = RP.USER_NO)
+		WHERE REPORT_STATUS = 'N'
+		  AND REVIEW_STATUS = 'Y'
+		ORDER BY REPORT_DATE DESC
+	</select>
+	
+	<!-- 관리자 페이지 신고 관리에서 신고된 코멘트를 삭제(REPORT_STATUS='Y') 하는 메소드 - 작성자: 수빈 -->
+	<update id="changeStatusReportedComment" parameterType="_int">
+		UPDATE REPORT
+		   SET REPORT_STATUS = 'Y'
+		WHERE REPORT_NO = #{reportNo}
+	</update>
+	
+	<!-- 관리자 페이지 신고 관리에서 신고된 코멘트를 삭제(REVIEW_STATUS='N') 하는 메소드 - 작성자: 수빈 -->
+	<update id="deleteReportedComment" parameterType="_int">
+		UPDATE REVIEW
+		   SET REVIEW_STATUS = 'N'
+		WHERE REVIEW_NO = #{reviewNo}
+	</update>
+	
+	<!-- 관리자 페이지 신고 관리에서 처리된 코멘트 보기 버튼 클릭 시 페이징바(select) - 작성자: 수빈 -->
+	<select id="processedCommentListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM REPORT
+		WHERE REPORT_STATUS = 'Y'
+	</select>
+	
+	<!-- 관리자 페이지 신고 관리에서 처리된 코멘트 보기 버튼 클릭 시 신고 처리된 모든 코멘트 조회 (select) - 작성자: 수빈 -->
+	<select id="processedCommentList" resultMap="reviewResultSet">
+		SELECT M.USER_ID
+			 , REPORT_NO
+		     , REVIEW_NO
+		     , REVIEW_REGISTER_DATE
+		     , REVIEW_CONTENT
+		     , REPORT_REASON
+		     , REPORT_STATUS
+		FROM REPORT RP
+		LEFT JOIN REVIEW RV USING (REVIEW_NO)
+		LEFT JOIN MEMBER M ON (M.USER_NO = RP.USER_NO)
+		WHERE REPORT_STATUS = 'Y'
+		  AND REVIEW_STATUS = 'N'
+		ORDER BY REPORT_DATE DESC
+	</select>
+	
+	<!-- 관리자 페이지 신고 관리에서 신고된 코멘트를 되돌리는(REPORT_STATUS='N') 메소드 - 작성자: 수빈 -->
+	<update id="resetStatusReportedComment" parameterType="_int">
+		UPDATE REPORT
+		   SET REPORT_STATUS = 'N'
+		WHERE REPORT_NO = #{reportNo}
+	</update>
+	
+	<!-- 관리자 페이지 신고 관리에서 신고된 코멘트를 삭제 상태를 되돌리는(REVIEW_STATUS='Y') 메소드 - 작성자: 수빈 -->
+	<update id="resetReportedComment" parameterType="_int">
+		UPDATE REVIEW
+		   SET REVIEW_STATUS = 'Y'
+		WHERE REVIEW_NO = #{reviewNo}
+	</update>
+	
+	<!-- 관리자 페이지 댓글 신고 관리를 위한 페이징바(select) - 작성자: 수빈 -->
+	<select id="reportedReplyListCount" resultType="_int">
+		SELECT COUNT(*)
+	    FROM REPORT
+	    WHERE REPORT_STATUS = 'N'
+	      AND COM_RPL_NO IS NOT NULL
+	</select>
+	
+	<!-- 관리자 페이지에서 신고 관리를 위해 신고된 모든 댓글 조회 (select) - 작성자: 수빈 -->
+	<select id="reportedReplyList" resultMap="replyResultSet">
+		SELECT M.USER_ID AS "USER_NO"
+			 , REPORT_NO
+		     , COM_RPL_NO
+		     , COM_RPL_REGISTER_DATE
+		     , COM_RPL_CONTENT
+		     , REPORT_REASON
+		     , REPORT_STATUS
+		FROM REPORT RP
+		LEFT JOIN COMMUNITY_REPLY CR USING (COM_RPL_NO)
+		LEFT JOIN MEMBER M ON (M.USER_NO = RP.USER_NO)
+		WHERE REPORT_STATUS = 'N'
+		  AND COM_RPL_STATUS = 'Y'
+		ORDER BY REPORT_DATE DESC
+	</select>
+	
+		<!-- 관리자 페이지 신고 관리에서 신고된 댓글 삭제(REPORT_STATUS='Y') 하는 메소드 - 작성자: 수빈 -->
+	<update id="changeStatusReportedReply" parameterType="_int">
+		UPDATE REPORT
+		   SET REPORT_STATUS = 'Y'
+		WHERE REPORT_NO = #{reportNo}
+	</update>
+	
+	<!-- 관리자 페이지 신고 관리에서 신고된 댓글을 삭제(REVIEW_STATUS='N') 하는 메소드 - 작성자: 수빈 -->
+	<update id="deleteReportedReply" parameterType="_int">
+		UPDATE COMMUNITY_REPLY
+		   SET COM_RPL_STATUS = 'N'
+		WHERE COM_RPL_NO = #{comRplNo}
+	</update>
+	
+		<!-- 관리자 페이지 신고 관리에서 처리된 댓글 보기 버튼 클릭 시 페이징바(select) - 작성자: 수빈 -->
+	<select id="processedReplyListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM REPORT
+		WHERE REPORT_STATUS = 'Y'
+		  AND COM_RPL_NO IS NOT NULL
+	</select>
+	
+	<!-- 관리자 페이지 신고 관리에서 처리된 댓글 보기 버튼 클릭 시 신고 처리된 모든 댓글 조회 (select) - 작성자: 수빈 -->
+	<select id="processedReplyList" resultMap="replyResultSet">
+		SELECT M.USER_ID AS "USER_NO"
+			 , REPORT_NO
+		     , COM_RPL_NO
+		     , COM_RPL_REGISTER_DATE
+		     , COM_RPL_CONTENT
+		     , REPORT_REASON
+		     , REPORT_STATUS
+		FROM REPORT RP
+		LEFT JOIN COMMUNITY_REPLY CR USING (COM_RPL_NO)
+		LEFT JOIN MEMBER M ON (M.USER_NO = RP.USER_NO)
+		WHERE REPORT_STATUS = 'Y'
+		  AND COM_RPL_STATUS = 'N'
+		ORDER BY REPORT_DATE DESC
+	</select>
+	
+	<!-- 관리자 페이지 신고 관리에서 신고된 댓글을 되돌리는(REPORT_STATUS='N') 메소드 - 작성자: 수빈 -->
+	<update id="resetStatusReportedReply" parameterType="_int">
+		UPDATE REPORT
+		   SET REPORT_STATUS = 'N'
+		WHERE REPORT_NO = #{reportNo}
+	</update>
+	
+	<!-- 관리자 페이지 신고 관리에서 신고된 댓글 삭제 상태를 되돌리는(REVIEW_STATUS='Y') 메소드 - 작성자: 수빈 -->
+	<update id="resetReportedReply" parameterType="_int">
+		UPDATE COMMUNITY_REPLY
+		   SET COM_RPL_STATUS = 'Y'
+		WHERE COM_RPL_NO = #{comRplNo}
+	</update>
+	
+</mapper>

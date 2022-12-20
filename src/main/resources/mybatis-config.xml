@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "mybatis-3-config.dtd" >
+<configuration>
+
+    <!-- 런타임 시 MyBatis 설정 -->
+    <settings>
+        <!-- DB에 전달할 값이 없을 때 NULL 전달 -->
+        <setting name="jdbcTypeForNull" value="NULL" />
+    </settings>
+
+    <!-- 작성할 코드 줄이기 위한 자바 타입의 별칭 설정 -->
+    <typeAliases>
+        <typeAlias type="com.urfavoriteott.ufo.admin.model.vo.Report" alias="report" />
+        <typeAlias type="com.urfavoriteott.ufo.community.model.vo.Community" alias="community" />
+        <typeAlias type="com.urfavoriteott.ufo.community.model.vo.CommunityReply" alias="communityReply" />
+        <typeAlias type="com.urfavoriteott.ufo.contents.model.vo.Episode" alias="episode" />
+        <typeAlias type="com.urfavoriteott.ufo.contents.model.vo.Movie" alias="movie" />
+        <typeAlias type="com.urfavoriteott.ufo.contents.model.vo.Payment" alias="payment" />
+        <typeAlias type="com.urfavoriteott.ufo.contents.model.vo.PaymentRegular" alias="paymentRegular" />
+        <typeAlias type="com.urfavoriteott.ufo.contents.model.vo.Review" alias="review" />
+        <typeAlias type="com.urfavoriteott.ufo.contents.model.vo.Tv" alias="tv" />
+        <typeAlias type="com.urfavoriteott.ufo.cs.model.vo.Notice" alias="notice" />
+        <typeAlias type="com.urfavoriteott.ufo.member.model.vo.Dib" alias="dib" />
+        <typeAlias type="com.urfavoriteott.ufo.member.model.vo.Member" alias="member" />
+        <typeAlias type="com.urfavoriteott.ufo.member.model.vo.Record" alias="record" />
+    </typeAliases>
+
+    <!-- SQL 매핑 파일 등록 -->
+    <mappers>
+        <mapper resource="/mappers/admin-mapper.xml" />
+        <mapper resource="/mappers/community-mapper.xml" />
+        <mapper resource="/mappers/member-mapper.xml" />
+        <mapper resource="/mappers/movie-mapper.xml" />
+        <mapper resource="/mappers/notice-mapper.xml" />
+        <mapper resource="/mappers/payment-mapper.xml" />
+        <mapper resource="/mappers/review-mapper.xml" />
+        <mapper resource="/mappers/tv-mapper.xml" />
+    </mappers>
+
+</configuration>

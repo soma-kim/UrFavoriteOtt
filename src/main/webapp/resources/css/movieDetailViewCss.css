@@ -1,0 +1,131 @@
+@charset "UTF-8";
+
+#content_container { margin-top: 0px !important; }
+
+#content_detail {position: relative; }
+#content_background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    filter: blur(40px)
+}
+
+#content_info {
+    position: relative;
+    margin-top: 120px;
+    margin-left: 5%;
+    margin-right: 5%;
+    height: 500px;
+}
+
+#content_title {
+    position: absolute;
+    display: inline;
+    font-size: 50px;
+    font-weight: bolder;
+    top: 0px;
+    left: 20px;
+}
+
+#content_poster img {
+    position: absolute;
+    right: 50px;
+    height: 450px;
+    border-radius: 10px;
+    box-shadow: 3px 3px 10px 5px rgb(41, 41, 41);
+}
+
+#content_tags {
+    position: absolute;
+    top: 80px;
+    left: 20px;
+    float: left;
+    font-size: 16px;
+    font-weight: bold;
+}
+.content_tag {
+    display: inline;
+    margin: 2px;
+    padding: 4px;
+    padding-left: 6px;
+    padding-right: 6px;
+    height: 100%;
+    border: 1px solid gray;
+    border-radius: 5px;
+}
+.content_tag.release_date { left: 80px; }
+.content_tag.genre { left: 150px; }
+.content_tag.runtime { left: 200px; }
+
+#content_btn {
+    position: absolute;
+    top: 130px;
+    left: 20px;
+}
+#content_view_btn {
+    padding: 25px;
+    padding-left: 60px;
+    padding-right: 60px;
+    background-color: white;
+    color: black;
+    font-size: 18px;
+    font-weight: bolder;
+    border: 0px;
+    border-radius: 5px;
+}
+#content_view_btn:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s;
+}
+
+#content_watchable {
+    position: absolute;
+    top: 0px;
+    padding: 0px;
+    margin-left: 50px;
+    width: 75px;
+    height: 80px;
+    background-color: transparent;
+    color: white;
+    font-weight: bolder;
+    border: 0px;
+}
+#content_watchable img {
+    width: 65px;
+    margin-bottom: 2px;
+}
+
+#content_text {
+    position: absolute;
+    top: 250px;
+    left: 20px;
+    font-weight: bold;
+}
+
+#content_tab {
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
+    height: 60px;
+    border-bottom: 1px solid gray;
+}
+#content_tab li {
+    list-style-type: none;
+    width: 10%;
+    float: left;
+}
+#content_tab a:hover { text-decoration: none; }
+#content_tab * { height: 100%; }
+#content_tab ul {
+    margin: 0px;
+    padding: 0px;
+}
+#content_tab a {
+    display: block;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 40px;
+    color: white;
+}
+#content_tab li:hover>a { color: rgb(125, 131, 133) !important; }

@@ -1,0 +1,342 @@
+@charset "UTF-8";
+
+/* ---------- 헤더 + 푸터 ---------- */
+#header_container, #footer_container {
+    /* 세로 크기 : 100(px) */
+    width: 100%;
+}
+
+
+/* ---------- 헤더 영역 ---------- */
+#header_container {
+    height: 100px;
+    position: fixed;
+    z-index: 8;
+    top: 0px;
+    /* 배경 색상 설정 */
+    background-image: linear-gradient(to bottom, rgb(23, 26, 33) 95%, transparent);
+}
+#header_container>div {
+    /* 크기 설정 */
+    height: 100%;
+    /* 위치 설정 */
+    float: left;
+}
+
+
+/* ===== 헤더 로고 ===== */
+#header_logo_container {
+    /* 좌우 여백 크기 : 10% */
+    margin-left: 10%;
+    /* 가로 크기 : 8% */
+    width: 8%;
+    /* 위치 설정 */
+    position: relative;
+}
+#header_logo {
+    /* 크기 설정 */
+    height: 50%;
+    /* 중앙 정렬 */
+    position: absolute;
+    margin: auto;
+    top: 0px;
+    bottom: 0px;
+}
+
+
+/* ===== 헤더 메뉴 ===== */
+
+/* 가로 크기 : 45% */
+#header_menu_container { width: 32%; }
+/* 마커 삭제 */
+#header_menu_container li, #header_profile_container li { list-style-type: none; }
+/* 메뉴 호버 시 텍스트 밑줄 삭제 */
+#header_menu_container a:hover, #header_profile_container a:hover { text-decoration: none; }
+
+
+/* ~~~ 메인 메뉴 ~~~ */
+
+/* 세로 크기 설정 */
+#header_menu_container *, #header_profile_container *:not(img) { height: 100%; }
+/* 여백 없애 메인 메뉴들 전체 채움 */
+#header_menu_container>ul, #header_profile_container>ul {
+    margin: 0px;
+    padding: 0px;
+}
+.main_menu {
+    /* 크기 설정 (메인 메뉴 총 5개) */
+    width: 25%;
+    /* 위치 설정 */
+    float: left;
+}
+/* 로그인 후 추가되는 메뉴 숨김 */
+/* .login_menu { display: none; } */
+.main_menu>a {
+    /* block 요소로 바꿈 */
+    display: block;
+    /* 텍스트 서식 설정 */
+    font-size: 18px;
+    font-weight: bolder;
+    /* 텍스트 중앙 정렬 */
+    text-align: center;
+    line-height: 100px;
+}
+/* 로그인만 텍스트 색상 다르게 설정 */
+.main_menu:not(#logout_menu)>a { color:rgb(255, 255, 255); }
+.login_menu { display: none; }
+.login_menu.logout { display: none; }
+.login_menu.login { display: block !important; }
+.logout_menu.logout { display: block !important; }
+.logout_menu.login { display: none; }
+
+
+/* ~~~ 메인 메뉴 호버 효과 ~~~ */
+
+/* 서브 메뉴 표시 */
+.main_menu:hover ul { display: block; }
+/* 텍스트 색상 변경 */
+.main_menu:hover>a { color: rgb(125, 131, 133) !important; }
+
+
+/* ~~~ 서브 메뉴 ~~~ */
+.sub_menu {
+    /* 메인 메뉴 호버 전까지 숨김 */
+    display: none;
+    /* 여백 제거 */
+    margin: 0px;
+    padding: 0px;
+    /* 가로 크기 메인 메뉴보다 크게 설정 */
+    width: 130%;
+    height: auto !important;
+    /* 컨텐츠 영역 요소보다 위로 오게 배치 설정 */
+    position: relative;
+    z-index: 8;
+    /* 배경 색상 설정 */
+    background-color: rgb(0, 0, 0);
+    /* 그림자 효과 */
+    box-shadow: 3px 3px 10px 5px rgb(71, 72, 72);
+}
+.sub_menu>li>a {
+    /* block 요소로 바꿈 */
+    display: block;
+    /* 텍스트 서식 설정 */
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 40px;
+    /* 텍스트 왼쪽 여백 설정 */
+    padding-left: 10%;
+    /* 텍스트 색상 설정 */
+    color: rgb(165, 165, 165);
+}
+
+
+/* ~~~ 서브 메뉴 호버 효과 ~~~ */
+
+/* 서브 메뉴 표시 유지 */
+.sub_menu:hover, #header_userInfo:hover { display: block; }
+/* 배경 + 텍스트 색상 변경 */
+.sub_menu>li:hover>a:not(#header_userInfo a) {
+    background-color: rgb(77, 77, 77);
+    color: rgb(255, 255, 255);
+}
+
+
+/* ===== 헤더 검색 ===== */
+#header_search_container {
+    /* 가로 크기 : 5% */
+    width: 5%;
+    /* 위치 설정 */
+    position: relative;
+}
+
+/* ~~~ 왼쪽 검색 아이콘 + 검색창 : 버튼 클릭 전까지 숨김 ~~~ */
+#header_search_form>i, #header_search_input { display: none; }
+
+/* ~~~ 검색창 + 검색 버튼 ~~~ */
+#header_search_input, #header_search_btn {
+    /* 배경 색상 설정 */
+    background-color: transparent;
+    /* 테두리 제거 */
+    border: 0;
+}
+
+
+/* ~~~ 검색창 ~~~ */
+#header_search_input {
+    /* 크기 설정 */
+    height: 35px;
+    /* 왼쪽 중앙 정렬 */
+    position: absolute;
+    margin: auto;
+    top: 0px;
+    bottom: 0px;
+    left: 70px;
+    /* 밑줄만 표시 */
+    border-bottom: 2px solid rgb(125, 131, 133);
+    /* 텍스트 여백 설정 */
+    padding: 5px;
+    /* 텍스트 서식 설정 */
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: rgb(255, 255, 255);
+}
+
+/* ~~~ 검색 버튼 ~~~ */
+#header_search_btn {
+    /* 클릭 가능한 영역 아이콘 크기보다 크게 설정 */
+    width: 35px;
+    height: 35px;
+    /* 오른쪽 중앙 정렬 */
+    position: absolute;
+    margin: auto;
+    top: 0px;
+    bottom: 0px;
+    right: 10px;
+}
+
+/* ~~~ 검색 아이콘 ~~~ */
+#header_search_container i {
+    /* 크기 설정 */
+    font-size: 1.5rem;
+    /* 색상 설정 */
+    color: rgb(255, 255, 255);
+}
+#header_search_form>i {
+    /* 크기 설정 */
+    height: 30px;
+    /* 왼쪽 중앙 정렬 */
+    position: absolute;
+    margin: auto;
+    top: 0px;
+    bottom: 0px;
+    left: 20px;
+}
+
+/* ~~~ 검색 버튼 클릭 효과 ~~~ */
+#header_empty_container { width: 25%; }
+#header_empty_container.active {
+    /* 메뉴 가로 크기 천천히 줄임 */
+    width: 0%;
+    transition: width 0.5s ease;
+}
+/* 메뉴 숨김 */
+#header_search_container.active {
+    /* 검색 가로 크기 천천히 확장 */
+    width: 30%;
+    transition: width 0.5s ease;
+}
+/* 왼쪽 검색 아이콘 표시 */
+#header_search_container.active i { display: block; }
+#header_search_container.active input {
+    /* 검색창 표시 */
+    display: block;
+    /* 검색창 가로 크기 천천히 확장 */
+    width: 70%;
+    transition: width 0.5s ease;
+}
+
+#header_profile_container {
+    width: 5%;
+    position: relative;
+}
+#header_profile_container *:not(img) { width: 100%; }
+#member_profile {
+    position: absolute;
+    margin: auto;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    /* 크기 설정 */
+    width: 40px;
+    height: 40px;
+    /* 테두리 효과 */
+    border-radius: 10px;
+}
+.mypage_menu {
+    position: absolute;
+    margin: auto;
+    right: 0px;
+    width: 300% !important;
+    z-index: 1;
+}
+.mypage_menu a { text-decoration: none; }
+#header_userInfo, #header_userInfo *:not(img) { height: 100px; }
+#header_userInfo { border-bottom: 1px solid rgb(108, 114, 118); }
+#header_userInfo p {
+    display: inline;
+    position: absolute;
+    padding-left: 30px;
+    top: 35px;
+    left: 70px;
+    width: auto;
+    height: auto;
+    font-size: 18px;
+    color:rgb(255, 255, 255);
+}
+#header_userInfo img {
+    width: 50px;
+    height: 50px;
+    margin-top: 25px;
+    margin-left: 30px;
+}
+
+#header_theme_container {
+    width: 5%;
+    position: relative;
+}
+#header_theme_container input { display: none; }
+#theme_btn_container {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    margin: auto;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+}
+#header_theme_container i {
+    font-size: 2rem;
+    color: rgb(255, 255, 255);
+}
+
+/* ---------- 푸터 영역 ---------- */
+#footer_container {
+    height: 150px;
+    background-color: rgb(23, 26, 33);
+}
+#footer_container>div:not(#footer_border) { width: 100%; }
+#footer_border {
+    margin-left: 7%;
+    width: 86%;
+    height: 1%;
+    background-color: rgb(108, 114, 118);
+}
+
+
+/* ===== ABOUT + 개인정보 보호정책 + 환불 정책 ===== */
+#footer_link {
+    height: 40%;
+    padding-top: 30px;
+    font-size: 15px;
+}
+#footer_link a {
+    color: rgb(108, 114, 118);
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* ~~~ ABOUT + 개인정보 보호정책 + 환불 정책 호버 효과 ~~~ */
+#footer_link td:hover>a { color: rgb(255, 255, 255); }
+
+
+/* ===== Copyright ===== */
+#footer_copyright {
+    height: 59%;
+    padding-top: 20px;
+    text-align: center;
+    font-size: 12px;
+    color: rgb(75, 78, 81);
+}

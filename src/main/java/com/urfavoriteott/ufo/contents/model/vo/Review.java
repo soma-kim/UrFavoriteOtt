@@ -14,7 +14,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class Review {
-	
+	 
 	private int reviewNo; 		  //	REVIEW_NO	NUMBER
 	private String reviewStatus;  //	REVIEW_STATUS	CHAR(1 BYTE)
 	private String reviewStar;		  //	REVIEW_STAR	NUMBER

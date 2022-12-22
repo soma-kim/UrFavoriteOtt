@@ -30,7 +30,7 @@
         <!-- 컨텐츠 영역 (개별 구현 구역) -->
         <div id="content_container">
        		<form id="loginUserForm" action="" method="post">
-       			<input type="hidden" name="loginUserNo" id="loginUserNo" value=${ loginUser.userNo }>
+       			<input type="hidden" name="loginUserNo" id="loginUserNo" value="${ loginUser.userNo }">
        		</form>
 	        <table id="user_profile">
 	            <tr>
@@ -90,7 +90,7 @@
 												<td id="ContentName">${ r.movieTitle }</td>
 											</c:when>
 											<c:otherwise>
-												<td id="ContentName">${ r.Tvname }</td>
+												<td id="ContentName">${ r.tvName }</td>
 											</c:otherwise>
 										</c:choose>
 										<td id="reviewStar">★ ${ r.reviewStar }</td>

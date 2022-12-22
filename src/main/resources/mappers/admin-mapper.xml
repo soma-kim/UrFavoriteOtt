@@ -7,7 +7,7 @@
 		<result column="TOTAL" property="total" />
 		<result column="DATE_RANGE" property="dateRange" />
 	</resultMap>
-
+ 
 	<!-- 리뷰 관련 resultSet, 작성자: 수빈 -->
 	<resultMap id="reviewResultSet" type="review">
 		<result column="REVIEW_NO" property="reviewNo" />

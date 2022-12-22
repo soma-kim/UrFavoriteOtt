@@ -11,7 +11,7 @@
 		<result column="USER_STATUS" property="userStatus" />
 		<result column="USER_PROFILE" property="userProfile" />
 	</resultMap>
-	
+	 
 	<!-- 리뷰 관련 resultSet, 작성자: 수빈 -->
 	<resultMap id="reviewResultSet" type="review">
 		<result column="REVIEW_NO" property="reviewNo" />

@@ -22,7 +22,7 @@ import com.urfavoriteott.ufo.contents.model.vo.Review;
 import com.urfavoriteott.ufo.member.model.service.MemberService;
 import com.urfavoriteott.ufo.member.model.vo.Member;
 
-
+ 
 @Controller
 public class MemberController {
 
